@@ -20,7 +20,7 @@ jobs:
           sfdx-auth-url: ${{ secrets.AUTH_SECRET }}
       - name: "install app and create delta"
         run: |
-          sfdx plugins:install sfdx-git-delta
+          echo y | sfdx plugins:install sfdx-git-delta@latest
           git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
           git fetch --all
           git --no-pager diff --name-status staging origin/main
