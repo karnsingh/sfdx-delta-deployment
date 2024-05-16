@@ -20,12 +20,12 @@ jobs:
           sfdx-auth-url: ${{ secrets.AUTH_SECRET }}
       - name: "install app and create delta"
         run: |
-        sfdx plugins:install sfdx-git-delta
-        git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-        git fetch --all
-        git --no-pager diff --name-status staging origin/main
-        sfdx sgd:source:delta --to staging --from origin/main --output .
-        cat package/package.xml
+          sfdx plugins:install sfdx-git-delta
+          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+          git fetch --all
+          git --no-pager diff --name-status staging origin/main
+          sfdx sgd:source:delta --to staging --from origin/main --output .
+          cat package/package.xml
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
       - name: 'Run Test on Metadata'
