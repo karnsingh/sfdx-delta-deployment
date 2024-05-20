@@ -32,6 +32,11 @@ jobs:
           cat package/package.xml
       - name: "install scanner and check changes"
         run: | 
+          wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-x64.tar.xz
+          mkdir -p ~/cli/sf
+          tar xJf sf-linux-x64.tar.xz -C ~/cli/sf --strip-components 1
+          export PATH=~/cli/sf/bin:$PATH
+          echo "$PATH" >> $GITHUB_PATH
           echo "Installing JDK"
           sudo apt-get install openjdk-8-jdk
           echo "Install SFDX Scanner"
