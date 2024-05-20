@@ -6,6 +6,7 @@ public with sharing class firstApex {
         //check 3
         //check 4 for checking scanner is running after removing un deployable code
         //check 7
+        //check 8
         for(integer i = 1; i<= 10 ; i++){
             System.debug('check value of i = ' + [select id from Account limit 1] );
         }
