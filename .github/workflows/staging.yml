@@ -26,6 +26,14 @@ jobs:
           git --no-pager diff --name-status staging origin/main
           sfdx sgd:source:delta --to staging --from origin/main --output .
           cat package/package.xml
+      - name: "install scanner and check changes"
+        run: | 
+          echo "Installing JDK"
+          sudo apt-get install openjdk-8-jdk
+          echo "Install SFDX Scanner"
+          echo -e 'y/n' | sfdx plugins:install @salesforce/sfdx-scanner
+          echo "Running SFDX Scanner"
+          npx sfdx scanner:run --target "**/default/**" --format "csv" --outfile "sfdxScannerAnalysis.csv" --violations-cause-error
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
       - name: 'Run Test on Metadata'
