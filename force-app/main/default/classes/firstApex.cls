@@ -9,8 +9,8 @@ public with sharing class firstApex {
         //check 8
         //check 9
         //check 10
-        for(integer i = 1; i<= 10 ; i++){
-            System.debug('check value of i = ' + [select id from Account limit 1] );
-        }
+        //for(integer i = 1; i<= 10 ; i++){
+           // System.debug('check value of i = ' + [select id from Account limit 1] );
+        //}
     }
 }
