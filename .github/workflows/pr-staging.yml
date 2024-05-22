@@ -14,6 +14,10 @@ jobs:
       - uses: sfdx-actions/setup-sfdx@v1
         with:
           sfdx-auth-url: ${{ secrets.AUTH_SECRET }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.17.0'
       - name: "install app and create delta"
         run: |
           echo y | sfdx plugins:install sfdx-git-delta@latest
@@ -23,7 +27,23 @@ jobs:
           git --no-pager diff --name-status pr origin/staging
           sfdx sgd:source:delta --to pr --from origin/staging --output .
           cat package/package.xml
+      - name: "install scanner and check changes"
+        run: | 
+          wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-x64.tar.xz
+          mkdir -p ~/cli/sf
+          tar xJf sf-linux-x64.tar.xz -C ~/cli/sf --strip-components 1
+          export PATH=~/cli/sf/bin:$PATH
+          echo "$PATH" >> $GITHUB_PATH
+          echo "Installing JDK"
+          sudo apt-get install openjdk-8-jdk
+          echo "Install SFDX Scanner"
+          echo -e 'y/n' | sfdx plugins:install @salesforce/sfdx-scanner
+          echo "sfdx scanner installed"
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
+      - name: "run scanner"
+        run: |
+          echo "Running SFDX Scanner"
+          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
       - name: 'Run Test on Metadata'
         run: sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -w30
