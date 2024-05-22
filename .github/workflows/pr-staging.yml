@@ -47,7 +47,7 @@ jobs:
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
       - name: Check for Issues
         run: |
-          if grep -q "violation" scanner-result.json; then
+          if grep -q "violation" scanner-result.csv; then
           echo "Issues found by SFDX Scanner"
           exit 1
           else
