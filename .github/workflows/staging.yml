@@ -27,8 +27,9 @@ jobs:
           echo y | sfdx plugins:install sfdx-git-delta@latest
           git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
           git fetch --all
-          git --no-pager diff --name-status staging origin/main
-          sfdx sgd:source:delta --to staging --from origin/main --output .
+          git checkout -b pr
+          git --no-pager diff --name-status pr origin/staging
+          sfdx sgd:source:delta --to pr --from origin/staging --output .
           cat package/package.xml
       - name: "install scanner and check changes"
         run: | 
@@ -47,8 +48,6 @@ jobs:
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
-          cd convert
-          npx sfdx scanner:run --target "./**/*.cls" --format "csv" --outfile "sfdxScannerAnalysis.csv"
-          cd..
+          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
       - name: 'Run Test on Metadata'
         run: sfdx force:mdapi:deploy --deploydir=convert -w 30
