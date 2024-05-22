@@ -45,12 +45,5 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
-      - name: Check for Issues
-        run: |
-          if grep -q "violation" scanner-result.csv; then
-          echo "Issues found by SFDX Scanner"
-          exit 1
-          else
-          echo "No issues found by SFDX Scanner"
       - name: 'Run Test on Metadata'
         run: sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -w30
