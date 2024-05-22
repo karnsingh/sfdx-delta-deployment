@@ -45,7 +45,7 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           cd convert
-          npx sfdx scanner:run --target "./**/*.cls" --format "csv" --outfile "sfdxScannerAnalysis.csv"
+          npx sfdx scanner:run --target "./**/*.cls" --format csv --o sfdxScannerAnalysis.csv
           cd..
       - name: 'Run Test on Metadata'
         run: sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -w30
