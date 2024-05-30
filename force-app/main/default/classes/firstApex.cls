@@ -1,5 +1,5 @@
-public with sharing class firstApex {
-    public firstApex() {
+global with sharing class firstApex {
+    global firstApex() {
         // addding change for cehck delta deploy
         //adding change for check scanner part of yml files
         System.debug('addding change for cehck delta deploy');
