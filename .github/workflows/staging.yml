@@ -48,6 +48,6 @@ jobs:
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
-          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
+          sfdx scanner:run --target "convert" --format "csv" --outfile "scanner-result.csv"
       - name: 'Run Test on Metadata'
         run: sfdx force:mdapi:deploy --deploydir=convert -w 30
