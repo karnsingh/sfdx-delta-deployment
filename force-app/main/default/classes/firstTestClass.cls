@@ -21,7 +21,7 @@ public class firstTestClass {
         List<Account> insertedAccounts = [SELECT Id, Name FROM Account WHERE Name LIKE 'Sample Account%'];
         System.assertEquals(5, insertedAccounts.size(), 'Expected 5 sample accounts to be inserted.');
         secondApex.myFirstApexClass(insertedAccounts);
-        firstApex a = new firstApex();
+        firstApex.nothing();
     }
 
 }
