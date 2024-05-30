@@ -22,6 +22,7 @@ public class firstTestClass {
         System.assertEquals(5, insertedAccounts.size(), 'Expected 5 sample accounts to be inserted.');
         secondApex.myFirstApexClass(insertedAccounts);
         firstApex a = new firstApex();
+        a.nothing();
     }
 
 }
