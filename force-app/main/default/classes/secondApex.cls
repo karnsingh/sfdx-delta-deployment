@@ -6,5 +6,6 @@ public with sharing class secondApex {
             System.debug('account name = ' + acc.name);
             System.debug('account Id = ' + acc.id);
         }
+        System.debug('final debug for check delta deployment with scanner');
     }
 }

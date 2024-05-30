@@ -20,6 +20,7 @@ public class firstTestClass {
         // Optionally, you can query the inserted records to verify
         List<Account> insertedAccounts = [SELECT Id, Name FROM Account WHERE Name LIKE 'Sample Account%'];
         System.assertEquals(5, insertedAccounts.size(), 'Expected 5 sample accounts to be inserted.');
+        System.debug('final debug for check delta deployment with scanner');
         secondApex.myFirstApexClass(insertedAccounts);
         firstApex.nothing();
     }
