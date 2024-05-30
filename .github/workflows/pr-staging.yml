@@ -27,6 +27,8 @@ jobs:
           git --no-pager diff --name-status pr origin/staging
           sfdx sgd:source:delta --to pr --from origin/staging --output .
           cat package/package.xml
+      - name: 'Convert Metadata'
+        run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
       - name: "install scanner and check changes"
         run: | 
           wget https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-x64.tar.xz
@@ -39,8 +41,6 @@ jobs:
           echo "Install SFDX Scanner"
           echo -e 'y/n' | sfdx plugins:install @salesforce/sfdx-scanner
           echo "sfdx scanner installed"
-      - name: 'Convert Metadata'
-        run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
