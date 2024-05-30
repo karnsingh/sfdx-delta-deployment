@@ -8,6 +8,8 @@ jobs:
   build:
   
     runs-on: ubuntu-latest
+    env:
+      SFDX_DISABLE_DNS_CHECK: true
     
     steps:
       - uses: actions/checkout@v2
