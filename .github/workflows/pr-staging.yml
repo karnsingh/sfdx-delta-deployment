@@ -45,6 +45,13 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           sfdx scanner:run --target "." --format "csv" --outfile "scanner-result.csv"
+      - name: "Read Scanner Results"
+        run: |
+          if [ -f "scanner-result.csv" ]; then
+            cat scanner-result.csv  # Display contents of the CSV file
+          else
+            echo "scanner-result.csv not found."
+          fi
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
       - name: 'Run Test on Metadata'
