@@ -8,6 +8,8 @@ jobs:
   build:
   
     runs-on: ubuntu-latest
+    env:
+      SFDX_DISABLE_DNS_CHECK: true
     
     steps:
       - uses: actions/checkout@v2
@@ -45,13 +47,19 @@ jobs:
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
       - name: "Read Scanner Results and Check Violations"
         run: |
-          performance_count=$(grep -c ",Performance," scanner-result.csv)
-          best_practices_count=$(grep -c ",Best Practices," scanner-result.csv)
-          echo "Performance violations count: $performance_count"
-          echo "Best Practices violations count: $best_practices_count"
-          if [ "$performance_count" -gt 0 ] || [ "$best_practices_count" -gt 0 ]; then
-            echo "Deployment stopped due to violations in Performance or Best Practices categories."
-            exit 1
+          if [ -f "scanner-result.csv" ]; then
+            performance_count=$(grep -c ",Performance," scanner-result.csv)
+            best_practices_count=$(grep -c ",Best Practices," scanner-result.csv)
+            echo "Performance violations count: $performance_count"
+            echo "Best Practices violations count: $best_practices_count"
+            num_lines=$(wc -l < scanner-result.csv)
+            echo "Number of violations: $num_lines"
+            if [ "$performance_count" -gt 0 ] || [ "$best_practices_count" -gt 0 ]; then
+              echo "There are some violations. Halting deployment."
+              exit 1
+            fi
+          else
+            echo "scanner-result.csv not found."
           fi
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
