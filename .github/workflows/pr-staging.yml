@@ -45,11 +45,14 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
+      - name: Set performance count
+        run: |
+          performance_count=$(grep -c ',Performance,' scanner-result.csv)
+          echo "Performance count: $performance_count"
       - name: "Read Scanner Results and Check Violations"
         run: |
           if [ -f "scanner-result.csv" ]; then
             echo "checking performace violation count"
-            performance_count=$(grep -c ,"Performance", scanner-result.csv)
             echo "Performance violations count: $performance_count"
             best_practices_count=$(grep -c ",Best Practices," scanner-result.csv)
             echo "Best Practices violations count: $best_practices_count"
