@@ -44,7 +44,7 @@ jobs:
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
-          sfdx scanner:run --target "." --format "csv" --outfile "scanner-result.csv"
+          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
       - name: "Read Scanner Results and Check Violations"
         run: |
           if [ -f "scanner-result.csv" ]; then
