@@ -44,7 +44,7 @@ jobs:
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
-          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
+          sfdx scanner:run --target "." --format "csv" --outfile "scanner-result.csv"
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
       - name: 'Run Test on Metadata'
