@@ -47,15 +47,13 @@ jobs:
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
       - name: "Read Scanner Results and Check Violations"
         run: |
-          if [ -f "scanner-result.csv" ]; then
-            num_lines=$(wc -l < scanner-result.csv)
-            echo "Number of violations: $num_lines"
-            if [ "$num_lines" -gt 30 ]; then
-              echo "There are $num_lines violations. Halting deployment."
-              exit 1
-            fi
-          else
-            echo "scanner-result.csv not found."
+          performance_count=$(grep -c ",Performance," scanner-result.csv)
+          best_practices_count=$(grep -c ",Best Practices," scanner-result.csv)
+          echo "Performance violations count: $performance_count"
+          echo "Best Practices violations count: $best_practices_count"
+          if [ "$performance_count" -gt 0 ] || [ "$best_practices_count" -gt 0 ]; then
+            echo "Deployment stopped due to violations in Performance or Best Practices categories."
+            exit 1
           fi
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
