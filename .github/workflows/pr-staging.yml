@@ -44,8 +44,20 @@ jobs:
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
-          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
+          sfdx scanner:run --target "." --format "csv" --outfile "scanner-result.csv"
+       - name: Read Scanner Results and Check Violations
+        run: |
+          if [ -f "scanner-result.csv" ]; then
+            num_lines=$(wc -l < scanner-result.csv)
+            echo "Number of violations: $num_lines"
+            if [ "$num_lines" -gt 1 ]; then
+              echo "There are more than 1 violations. Halting deployment."
+              exit 1
+            fi
+          else
+            echo "scanner-result.csv not found."
+          fi
       - name: 'Convert Metadata'
-        run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
+        run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
       - name: 'Run Test on Metadata'
         run: sfdx force:mdapi:deploy --deploydir=convert --testlevel=RunLocalTests --checkonly -w30
