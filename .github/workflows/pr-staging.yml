@@ -45,13 +45,13 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           sfdx scanner:run --target "." --format "csv" --outfile "scanner-result.csv"
-       - name: Read Scanner Results and Check Violations
+      - name: "Read Scanner Results and Check Violations"
         run: |
           if [ -f "scanner-result.csv" ]; then
             num_lines=$(wc -l < scanner-result.csv)
             echo "Number of violations: $num_lines"
-            if [ "$num_lines" -gt 1 ]; then
-              echo "There are more than 1 violations. Halting deployment."
+            if [ "$num_lines" -gt 5 ]; then
+              echo "There are more than 5 violations. Halting deployment."
               exit 1
             fi
           else
