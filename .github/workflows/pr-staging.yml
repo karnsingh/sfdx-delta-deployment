@@ -59,7 +59,7 @@ jobs:
           import pandas as pd
 
           # Define the file and column names
-          csv_file = 'sfdx_scan_results.csv'
+          csv_file = 'scanner-result.csv'
           category_column = 'Category'
           performance_value = 'Performance'
 
