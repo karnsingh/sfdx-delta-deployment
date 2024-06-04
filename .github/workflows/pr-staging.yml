@@ -88,10 +88,10 @@ jobs:
                     sys.exit(1) 
             else:
                 print(f"Column '{category_column}' not found in the CSV file.")
-            EOF
           else:
             print('File does not exist.')
             exit(1)
+          EOF
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
       - name: 'Run Test on Metadata'
