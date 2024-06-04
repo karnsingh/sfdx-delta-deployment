@@ -76,6 +76,7 @@ jobs:
 
           # Check if the specified column exists
           if os.path.isfile(csv_file):
+            print('File exists.')
             if category_column in df.columns:
               # Count the number of rows with 'Performance' and 'Best Practices' in the 'Category' column
                 performance_count = df[df[category_column] == performance_value].shape[0]
