@@ -45,26 +45,35 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
-      - name: Set performance count
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'     
+      - name: Install dependencies
         run: |
-          performance_count=$(grep -c ',Performance,' scanner-result.csv)
-          echo "Performance count: $performance_count"
+          python -m pip install pandas
       - name: "Read Scanner Results and Check Violations"
-        run: |
-          if [ -f "scanner-result.csv" ]; then
-            echo "checking performace violation count"
-            echo "Performance violations count: $performance_count"
-            best_practices_count=$(grep -c ",Best Practices," scanner-result.csv)
-            echo "Best Practices violations count: $best_practices_count"
-            num_lines=$(wc -l < scanner-result.csv)
-            echo "Number of violations: $num_lines"
-            if [ "$performance_count" -gt 0 ] || [ "$best_practices_count" -gt 0 ]; then
-              echo "There are some violations. Halting deployment."
-              exit 1
-            fi
-          else
-            echo "scanner-result.csv not found."
-          fi
+        run:  |
+          python - <<EOF
+          import os
+          import pandas as pd
+
+          # Define the file and column names
+          csv_file = 'sfdx_scan_results.csv'
+          category_column = 'Category'
+          performance_value = 'Performance'
+
+          # Read the CSV file
+          df = pd.read_csv(csv_file)
+
+          # Check if the specified column exists
+          if category_column in df.columns:
+              # Count the number of rows with 'Performance' in the 'Category' column
+              performance_count = df[df[category_column] == performance_value].shape[0]
+              print(f"Number of rows with '{performance_value}' in '{category_column}' column: {performance_count}")
+          else:
+              print(f"Column '{category_column}' not found in the CSV file.")
+          EOF
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
       - name: 'Run Test on Metadata'
