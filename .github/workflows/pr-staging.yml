@@ -45,6 +45,13 @@ jobs:
         run: |
           echo "Running SFDX Scanner"
           sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
+      - name: "Read Scanner Results"
+        run: |
+          if [ -f "scanner-result.csv" ]; then
+            cat scanner-result.csv
+          else
+            echo "scanner-result.csv not found."
+          fi
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
