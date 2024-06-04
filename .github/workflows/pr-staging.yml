@@ -44,19 +44,50 @@ jobs:
       - name: "run scanner"
         run: |
           echo "Running SFDX Scanner"
-          sfdx scanner:run --target "." --format "csv" --outfile "scanner-result.csv"
-       - name: Read Scanner Results and Check Violations
+          sfdx scanner:run --target "force-app" --format "csv" --outfile "scanner-result.csv"
+      - name: "Read Scanner Results"
         run: |
           if [ -f "scanner-result.csv" ]; then
-            num_lines=$(wc -l < scanner-result.csv)
-            echo "Number of violations: $num_lines"
-            if [ "$num_lines" -gt 1 ]; then
-              echo "There are more than 1 violations. Halting deployment."
-              exit 1
-            fi
+            cat scanner-result.csv
           else
             echo "scanner-result.csv not found."
           fi
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'     
+      - name: Install dependencies
+        run: |
+          python -m pip install pandas
+      - name: "Read Scanner Results and Check Violations"
+        run:  |
+          python - <<EOF
+          import os
+          import pandas as pd
+
+          # Define the file and column names
+          csv_file = 'scanner-result.csv'
+          category_column = 'Category'
+          performance_value = 'Performance'
+          best_practices_value = 'Best Practices'
+
+           # Read the CSV file
+          df = pd.read_csv(csv_file)
+
+          # Check if the specified column exists
+          if category_column in df.columns:
+             # Count the number of rows with 'Performance' and 'Best Practices' in the 'Category' column
+              performance_count = df[df[category_column] == performance_value].shape[0]
+              print(f"Number of rows with '{performance_value}' in '{category_column}' column: {performance_count}")
+              best_practices_count = df[df[category_column] == best_practices_value].shape[0]
+              print(f"Number of rows with '{best_practices_value}' in '{category_column}' column: {best_practices_count}")
+          
+              if performance_count > 0 or best_practices_count > 0:
+                  print("Stopping deployment due to violations.")
+                  sys.exit(1) 
+          else:
+              print(f"Column '{category_column}' not found in the CSV file.")
+          EOF
       - name: 'Convert Metadata'
         run: sfdx force:source:convert --manifest=package/package.xml --output-dir=convert
       - name: 'Run Test on Metadata'
