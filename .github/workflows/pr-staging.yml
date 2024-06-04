@@ -58,18 +58,18 @@ jobs:
           import os
           import pandas as pd
 
-        # Define the file and column names
+          # Define the file and column names
           csv_file = 'scanner-result.csv'
           category_column = 'Category'
           performance_value = 'Performance'
           best_practices_value = 'Best Practices'
 
-        # Read the CSV file
+           # Read the CSV file
           df = pd.read_csv(csv_file)
 
-        # Check if the specified column exists
+          # Check if the specified column exists
           if category_column in df.columns:
-        # Count the number of rows with 'Performance' and 'Best Practices' in the 'Category' column
+             # Count the number of rows with 'Performance' and 'Best Practices' in the 'Category' column
               performance_count = df[df[category_column] == performance_value].shape[0]
               print(f"Number of rows with '{performance_value}' in '{category_column}' column: {performance_count}")
               best_practices_count = df[df[category_column] == best_practices_value].shape[0]
